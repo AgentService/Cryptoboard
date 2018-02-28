@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="eng">
+<head>
+    <!--<script type="application/javascript">-->
+
+    <!--function draw(){-->
+    <!--setInterval(update,10);-->
+    <!--update();-->
+    <!--}-->
+
+    <!--function update() {-->
+    <!--var width = window.innerWidth;-->
+    <!--var height = 500;-->
+    <!--var myCanvas = document.getElementById("myCanvas");-->
+    <!--myCanvas.width = width;-->
+    <!--myCanvas.height = height;-->
+
+    <!--var context = myCanvas.getContext("2d");-->
+
+    <!--context.fillStyle = "transparent";-->
+
+    <!--var rad=3;-->
+    <!--var gaps= rad*20;-->
+    <!--var widthCount = parseInt(width/gaps);-->
+    <!--var heightCount = parseInt(height/gaps);-->
+    <!--var aColors=["#43A9D1","#EFA63B","#EF7625","#5E4130","#EEE","#DDD"];-->
+    <!--var aColorsLength = aColors.length;-->
+    <!--context.fillStyle = "grey" ; // aColors[parseInt(Math.random()*aColorsLength)]-->
+    <!--for(var x=3; x<widthCount;x++){-->
+    <!--for(var y=3; y<heightCount;y++){-->
+    <!--context.beginPath();-->
+    <!--context.arc(rad+gaps*x,rad+ gaps*y, rad, 0, Math.PI*2, true);-->
+    <!--context.closePath();-->
+    <!--context.fill();-->
+    <!--}-->
+    <!--}-->
+    <!--for(var x=3; x<widthCount;x++){-->
+    <!--for(var y=3; y<heightCount;y++){-->
+    <!--context.fillStyle = "red" ; // aColors[parseInt(Math.random()*aColorsLength)]-->
+    <!--context.beginPath();-->
+    <!--context.arc(rad+gaps*[parseInt(Math.random()*rad)]*x,rad+ gaps*[parseInt(Math.random()*rad/1.5)]*y, rad*3, 0, Math.PI*2, true);-->
+    <!--context.closePath();-->
+    <!--context.fill();-->
+    <!--}-->
+    <!--}-->
+    <!--}-->
+    <!--</script>-->
+    <script>
+        paceOptions = {
+            ajax: false, // disabled
+            document: true, // disabled
+            eventLag: true, // disabled
+            elements: {
+                selectors: ['.fp-enabled']
+            }
+        }
+    </script>
+
+    <script>
+        var TxtRotate = function (el, toRotate, period) {
+            this.toRotate = toRotate;
+            this.el = el;
+            this.loopNum = 0;
+            this.period = parseInt(period, 10) || 2000;
+            this.txt = '';
+            this.tick();
+            this.isDeleting = false;
+        };
+
+        TxtRotate.prototype.tick = function () {
+            var i = this.loopNum % this.toRotate.length;
+            var fullTxt = this.toRotate[i];
+
+            if (this.isDeleting) {
+                this.txt = fullTxt.substring(0, this.txt.length - 1);
+            } else {
+                this.txt = fullTxt.substring(0, this.txt.length + 1);
+            }
+
+            this.el.innerHTML = '<span class="wrap">' + this.txt + '</span>';
+
+            var that = this;
+            var delta = 50 - Math.random() * 100;
+
+            if (this.isDeleting) {
+                delta /= 2;
+            }
+
+            if (!this.isDeleting && this.txt === fullTxt) {
+                delta = this.period;
+                this.isDeleting = true;
+            } else if (this.isDeleting && this.txt === '') {
+                this.isDeleting = false;
+                this.loopNum++;
+                delta = 500;
+            }
+
+            setTimeout(function () {
+                that.tick();
+            }, delta);
+        };
+
+        window.onload = function () {
+            var elements = document.getElementsByClassName('txt-rotate');
+            for (var i = 0; i < elements.length; i++) {
+                var toRotate = elements[i].getAttribute('data-rotate');
+                var period = elements[i].getAttribute('data-period');
+                if (toRotate) {
+                    new TxtRotate(elements[i], JSON.parse(toRotate), period);
+                }
+            }
+            // INJECT CSS
+            var css = document.createElement("style");
+            css.type = "text/css";
+            css.innerHTML = ".txt-rotate > .wrap { border-right: 0.08em solid #666 }";
+            document.body.appendChild(css);
+        };
+    </script>
+    <script src="Js/canvas.js"></script>
+    <!--<script src="Js/pace.min.js"></script>-->
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <!- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="bower_components/fullpage.js/jquery.fullPage.css"/>
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+
+    <link rel="stylesheet" type="text/css" href="bower_components/slick-carousel/slick/slick.css"/>
+    <link rel="stylesheet" type="text/css" href="bower_components/slick-carousel/slick/slick-theme.css"/>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.16/p5.js"></script>
+    <script type='text/javascript' src='bower_components/p5/addons/p5.dom.js'></script>
+
+
+    <!- Font -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:400,700" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css?family=Raleway:200,100,400" rel="stylesheet" type="text/css"/>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="CSS/styles.css">
+</head>
+<body onload="draw();">
+<div class="loading"></div>
+<div class="svg-wrapper_brand">
+    <svg height="150%" width="100%" xmlns="http://www.w3.org/2000/svg">
+        <rect class="shape_brand" height="150%" width="100%"/>
+    </svg>
+</div>
+<nav class="navbar navbar-expand-lg navbar-custom fixed-top ">
+    <a class="navbar-brand" data-menuanchor="firstPage" href="#firstPage">
+
+        MR
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+
+            <li class="nav-item" data-menuanchor="firstPage">
+                <div class="svg-wrapper">
+                    <svg height="45" width="100" xmlns="http://www.w3.org/2000/svg">
+                        <rect class="shape" height="40" width="150"/>
+                    </svg>
+                    <a class="nav-link text" href="#firstPage"><span>home</span><span
+                            class="sr-only">(current)</span></a>
+                </div>
+
+            </li>
+            <li class="nav-item" data-menuanchor="secondPage">
+                <div class="svg-wrapper">
+                    <svg height="45" width="100" xmlns="http://www.w3.org/2000/svg">
+                        <rect class="shape" height="40" width="150"/>
+                    </svg>
+                    <a class="nav-link text" href="#secondPage"><span>me</span></a>
+                </div>
+
+            </li>
+            <li class="nav-item" data-menuanchor="thirdPage">
+                <div class="svg-wrapper">
+                    <svg height="45" width="100" xmlns="http://www.w3.org/2000/svg">
+                        <rect class="shape" height="40" width="150"/>
+                    </svg>
+                    <a class="nav-link text" href="#thirdPage"><span>work</span></a>
+                </div>
+
+
+            </li>
+            <li class="nav-item" data-menuanchor="fourthPage">
+                <div class="svg-wrapper">
+                    <svg height="45" width="100" xmlns="http://www.w3.org/2000/svg">
+                        <rect class="shape" height="40" width="150"/>
+                    </svg>
+                    <a class="nav-link text" href="#fourthPage"><span>contact</span></a>
+                </div>
+
+            </li>
+        </ul>
+    </div>
+</nav>
+<div id="fullpage">
+
+    <div class="section page1 greyscale" data-anchor="firstPage">
+        <div id="myContainer">
+            <canvas id="myCanvas2"></canvas>
+
+        </div>
+
+
+        <div class="parent">
+            <div class="child">
+
+            </div>
+        </div>
+        <!--<div style="background-color: #96ceb4;width:150px;height:50px"><p>home</p></div>-->
+        <!--<div style="background-color: #ffeead;width:150px;height:50px"><p>about me</p></div>-->
+        <!--<div style="background-color: #ffcc5c;width:150px;height:50px"><p>contact</p></div>-->
+
+        <h1 class="intro">
+
+            <img src="img/desigeneck.svg" class="img-fluid triangle_intro" alt="">
+            <span>I'm </span>
+            <span>Markus</span>
+            <span>Romaniw</span>
+            <span>fresh Frontend & Software Developer <span style="display:inline-block"
+                                                            class="txt-rotate"
+                                                            data-period="2000"
+                                                            data-rotate='[ "x", "simple.", "pure JS.", "pretty.", "fun!" ]'></span>
+
+        </span>
+        </h1>
+
+    </div>
+
+    <div class="section page2" data-anchor="secondPage">
+        <img src="img/triangle_secondright.svg" class="img-fluid triangle secondright " alt="">
+        <img src="img/triangle_secondleft.svg" class="img-fluid triangle secondleft" alt="">
+
+        <div class="main">
+            <div class="row">
+
+                <div class="portrait">
+                    <img src="img/portrait.svg" class="img-fluid portrait shadow" alt="">
+
+                    <!--<img src="img/portrait_line.svg" class="img-fluid portrait line1" alt="">-->
+                    <!--<img src="img/portrait_line2.svg" class="img-fluid portrait line2" alt="">-->
+                </div>
+            </div>
+            <h2 class="page_headline"></h2>
+            <div class="row">
+                <div class="col-sm-12 col-md-6 col-lg-6 contentleft">
+
+                    <div class="me_contentleft">
+                        <div class="me_left">
+                            <p>Profile</p>
+                            <p>Social</p>
+                            <p>Hobbies</p>
+                            <br>
+                            <p>Skills</p>
+                        </div>
+                        <div class="me_right">
+                            <p>Application & Web - Developer</p>
+                            <p>
+                                <img src="img/icons/001-linkedin.svg" class="img-fluid icons" alt="">
+                                <img src="img/icons/002-twitter.svg" class="img-fluid icons" alt="">
+                                <img src="img/icons/003-facebook.svg" class="img-fluid icons" alt="">
+                            </p>
+                            <p>
+                                <img src="img/icons/001-football-ball.svg" class="img-fluid icons" alt="">
+                                <img src="img/icons/002-code.svg" class="img-fluid icons" alt="">
+                                <img src="img/icons/003-bike.svg" class="img-fluid icons" alt="">
+                                <img src="img/icons/004-man-playing-badminton.svg" class="img-fluid icons" alt="">
+
+                            </p>
+                            <br>
+                            <div class="skill-wrapper">
+
+                                <div class="skillbar">
+                                    <div class="html5 bar">
+                                        <span>HTML5</span><span>40%</span>
+                                    </div>
+                                </div>
+                                <div class="skillbar">
+                                    <div class="css3 bar">
+                                        <span>CSS3</span><span>30%</span>
+                                    </div>
+                                </div>
+                                <div class="skillbar">
+                                    <div class="java bar">
+                                        <span>JAVA</span><span>35%</span>
+                                    </div>
+                                </div>
+                                <div class="skillbar">
+                                    <div class="dance bar">
+                                        <span>DANCE</span><span>30%</span>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                            <!--<div class="skills">-->
+                            <!--<ul>-->
+                            <!--<li><span class="html5"></span><em>HTML 5</em></li>-->
+                            <!--<li><span class="css3"></span><em>CSS 3</em></li>-->
+                            <!--<li><span class="jquery"></span><em>jQuery</em></li>-->
+                            <!--<li><span class="photoshop"></span><em>Photoshop</em></li>-->
+                            <!--</ul>-->
+                            <!--</div>-->
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="col-sm-12 col-md-6 col-lg-6 contentright ">
+                    <!--<div class="svg-wrapper-me">-->
+                    <!--<svg height="100%" width="100%" xmlns="http://www.w3.org/2000/svg">-->
+                    <!--<rect class="shape-me" height="100%" width="100%" />-->
+                    <!--</svg>-->
+                    <!--</div>-->
+
+                    <div class="me">
+                        <div class="me-wrapper">
+                            <p>
+                                ,,Hello my name is Markus. I just finished my education as Software Developer.
+                                I am currently looking for a job. If you have any more questions you can either browse
+                                on this site or contact me via social or email :)
+                                <br>
+                                <br>
+                                Have a nice day!''
+                            </p>
+                            <img src="img/sign.svg" class="img-fluid sign" alt="">
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="section page3" data-anchor="thirdPage">
+
+        <div class="slider">
+            <div class="item">
+                <div class="slider-content">
+                    <div class="slider-header">
+                        AutoIt
+                    </div>
+                    <p>
+                        AutoIt v3 is a freeware BASIC-like scripting language designed for automating the Windows GUI
+                        and general scripting.
+                        It uses a combination of simulated keystrokes, mouse movement and
+                        window/control manipulation in order to automate tasks in a way not possible or reliable with
+                        other languages.
+                        I created a small tool for recording keystrokes. It saves the records in an HTML file and sends
+                        it via mail.
+                        It was done for observing employees and optimizing there workflows.
+                    </p>
+                </div>
+            </div>
+            <div class="item">
+                <div class="slider-content">
+                    <div class="slider-header">
+                        JavaFX
+                    </div>
+                    <p>
+                      Me and a group of friends are working on a sever-client based "sink ships" game in Java.
+                      While they focus on our own protocol and backend functionality - im working on a modern GUI.
+                      I started learning to work with keyframes, eventhandlers, and general GUI building.
+                        Since those functions are kind of similar in javascript - it is nice that i can use them in webdesign too.
+                    </p>
+                </div>
+            </div>
+            <div class="item"><p>
+                ,,Hello my name is Markus. I just finished my education as Software Developer.
+                I am currently looking for a job. If you have any more questions you can either browse on this site or
+                contact me via social or email :)
+                <br>
+                <br>
+                Have a nice day!''
+            </p></div>
+        </div>
+        <div class="slider-nav">
+            <div class="item"><img src="img/mood/autoit.png" alt="" class=""></div>
+            <div class="item"><img src="img/javafxgui.jpg" alt="" class=""></div>
+            <div class="item"><img src="img/mood/JAVAFX.png" alt="" class=""></div>
+        </div>
+
+
+    </div>
+
+    <div class="section page4" data-anchor="fourthPage">
+        <!--<img src="img/triangle_secondright.svg" class="img-fluid triangle secondright " alt="">-->
+        <!--<img src="img/triangle_secondleft.svg" class="img-fluid triangle secondleft" alt="">-->
+        <img src="img/triangle_end.svg" class="img-fluid triangle_end" alt="">
+        <div class="main">
+            <div class="row">
+
+                <div class="portrait">
+                    <img src="img/portrait.svg" class="img-fluid portrait shadow" alt="">
+
+                    <!--<img src="img/portrait_line.svg" class="img-fluid portrait line1" alt="">-->
+                    <!--<img src="img/portrait_line2.svg" class="img-fluid portrait line2" alt="">-->
+                </div>
+            </div>
+            <h2 class="page_headline"></h2>
+            <div class="row">
+                <div class="col-sm-12 col-md-6 col-lg-6 contentleft">
+
+                </div>
+
+
+                <div class="col-sm-12 col-md-6 col-lg-6 contentright ">
+                    <!--<div class="svg-wrapper-me">-->
+                    <!--<svg height="100%" width="100%" xmlns="http://www.w3.org/2000/svg">-->
+                    <!--<rect class="shape-me" height="100%" width="100%" />-->
+                    <!--</svg>-->
+                    <!--</div>-->
+
+                    <div class="me">
+                        <div class="me-wrapper">
+                            <p>
+                                ,,Hello my name is Markus. I just finished my education as Software Developer.
+                                I am currently looking for a job. If you have any more questions you can either browse
+                                on this site or contact me via social or email :)
+                                <br>
+                                <br>
+                                Have a nice day!''
+                            </p>
+                            <img src="img/sign.svg" class="img-fluid sign" alt="">
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+
+<!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>-->
+
+<script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="bower_components/fullpage.js/jquery.fullPage.js"></script>
+<script type="text/javascript" src="bower_components/slick-carousel/slick/slick.min.js"></script>
+
+<script src="bower_components/popper.js/dist/popper.js"></script>
+<!--<script src="bower_components/jquery/dist/jquery.js"></script>-->
+<script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+<script src="sketch.js"></script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.slider').slick({
+            dots: true,
+            infinite: true,
+            speed: 500,
+            fade: true,
+            draggable: true,
+
+            asNavFor: '.slider-for',
+
+            pauseOnFocus: true,
+            pauseOnHover: true,
+            arrows: true,
+            focusOnSelect: true,
+            cssEase: 'linear',
+            adaptiveHeight: false,
+
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            arrows: false,
+            fade: true,
+            asNavFor: '.slider-nav',
+
+            autoplay: false
+        });
+        $('.slider-nav').slick({
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            asNavFor: '.slider',
+            dots: true,
+            centerMode: true,
+            focusOnSelect: true,
+            infinite: true
+
+        });
+    });
+</script>
+
+<script>$(document).ready(function () {
+    $('#fullpage').fullpage();
+});
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('#fullpage').fullpage({
+            anchors: ['firstPage', 'secondPage', 'thirdPage', 'fourthPage']
+        });
+    });
+</script>
+
+
+</body>
+
+</html>

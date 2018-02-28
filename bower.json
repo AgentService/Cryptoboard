@@ -1,0 +1,10 @@
+{
+  "name": "portfolio_romaniw",
+  "description": "Bower Components des Figural Chors",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "bootstrap": "v4.0.0-beta",
+    "slick-carousel": "^1.8.1"
+  }
+}
